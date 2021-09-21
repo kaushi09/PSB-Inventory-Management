@@ -23,3 +23,8 @@ a) Requirement 3 – Search OR
 b) Requirement 3 – Sorting
 State clearly how you arrived at the Big O-notation for one of the above requirements. Partial
 marks will be awarded only for stating without showing the work in arriving at your conclusion.
+
+## How to run project
+
+run the below command
+`python3 app.py`
