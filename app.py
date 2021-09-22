@@ -24,7 +24,7 @@ class Login:
         self.passwordText = Entry(self.frame)
         self.passwordText.grid(row=1, column=1)
 
-        def addItem():
+        def auth():
             if self.usernameText.get() == "" or self.passwordText.get() == "":
                 messagebox.showerror(
                     "Error", "Username and Password field are required", parent=self.frame)
@@ -45,7 +45,7 @@ class Login:
 
                 cnx.close()
 
-        self.loginButton = Button(self.frame, text="Login", command=addItem)
+        self.loginButton = Button(self.frame, text="Login", command=auth)
         self.loginButton.grid(row=2, column=1)
 
 
