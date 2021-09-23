@@ -49,6 +49,8 @@ class Emplloyee:
                     cur = con.cursor()
                     cur.execute("insert into employees (name, employee_no, registered_at) values(%s,%s,%s)",
                                 (self.name.get(), self.emp_no.get(), self.date.get()))
+                    self.framet.destroy()
+                    getEmployee()
                     con.commit()
                     messagebox.showinfo("Success", "Employee added")
                 except Exception as e:
@@ -61,29 +63,42 @@ class Emplloyee:
             self.frame, text="Add Emplloyee", command=addEmplloyee)
         self.loginButton.grid(row=3, column=1)
 
-        total_rows = 5
-        total_columns = 4
-        # code for creating table
-        for i in range(total_rows):
-            for j in range(total_columns):
+        def getEmployee():
+            self.framet = Frame(master)
+            self.framet.pack()
 
-                self.enter = Entry(master, width=20, fg='blue',
-                                   font=('Arial', 16, 'bold'))
+            try:
+                con = mysql.connector.connect(
+                    host="localhost",
+                    user="root",
+                    passwd="12345678",
+                    database="ims",
+                    auth_plugin='mysql_native_password'
+                )
+                cur = con.cursor()
+                cur.execute("select * from employees")
 
-                self.enter.grid(row=6, column=7)
-                self.enter.insert(END, lst[i][j])
+                lst = cur.fetchall()
+                # find total number of rows and
+                # columns in list
+                total_rows = len(lst)
+                total_columns = len(lst[0])
 
-        # take the data
-        lst = [(1, 'Raj', 'Mumbai', 19),
-               (2, 'Aaryan', 'Pune', 18),
-               (3, 'Vaishnavi', 'Mumbai', 20),
-               (4, 'Rachna', 'Mumbai', 21),
-               (5, 'Shubham', 'Delhi', 21)]
+                # code for creating table
+                for i in range(total_rows):
+                    for j in range(total_columns):
+                        self.table = Entry(self.framet, width=20, fg='blue',
+                                           font=('Arial', 16, 'bold'))
+                        self.table.grid(row=i, column=j)
+                        self.table.insert(END, lst[i][j])
+                        con.commit()
+            except Exception as e:
+                con.rollback()
+                messagebox.showerror("Error", e)
 
-        # find total number of rows and
-        # columns in list
-        total_rows = len(lst)
-        total_columns = len(lst[0])
+                con.close()
+
+        getEmployee()
 
 
 master = Tk()
