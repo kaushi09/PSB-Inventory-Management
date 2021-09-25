@@ -2,32 +2,32 @@
 from Conn import Conn
 
 
-class ItemModel(Conn):
+class EmployeeModel(Conn):
 
     def get(self):
         super()
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items")
+        cur.execute("SELECT * FROM employees")
         list = cur.fetchall()
         self.conn.close()
         return list
 
-    def create(self, name, cate, qty, price, date):
+    def create(self, name, emp_no, date):
         super()
-        val = (name, cate, qty, price, date)
+        val = (name, emp_no, date)
         cur = self.conn.cursor()
         cur.execute(
-            "insert into items (name, category, qty, price, date) values(%s,%s,%s,%s,%s)", val)
+            "insert into employees (name, employee_no, registered_at) values(%s,%s,%s)", val)
         self.conn.commit()
         self.conn.close()
         return True
 
-    def update(self, id, name, cate, qty, price, date):
+    def update(self, id, name, emp_no, date):
         super()
-        val = (name, cate, qty, price, date, id)
+        val = (name, emp_no, date, id)
         cur = self.conn.cursor()
         cur.execute(
-            "UPDATE items SET name = %s, category = %s, qty = %s, price = %s, date = %s WHERE id = %s", val)
+            "UPDATE employees SET name = %s, emp_no = %s, date = %s WHERE id = %s", val)
         self.conn.commit()
         self.conn.close()
         return True
@@ -36,8 +36,19 @@ class ItemModel(Conn):
         super()
         try:
             cur = self.conn.cursor()
-            cur.execute("DELETE FROM items WHERE id = " +
+            cur.execute("DELETE FROM employees WHERE id = " +
                         str(id))
+            self.conn.commit()
+            self.conn.close()
+            return True
+        except:
+            return False
+
+    def show(self, id):
+        super()
+        try:
+            cur = self.conn.cursor()
+            cur.execute("SELECT * FROM employees WHERE id = %s", (id,))
             self.conn.commit()
             self.conn.close()
             return True
@@ -47,16 +58,8 @@ class ItemModel(Conn):
     def search(self, name):
         super()
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items WHERE name LIKE " +
+        cur.execute("SELECT * FROM employees WHERE name LIKE " +
                     "'"+str(name)+"%'")
-        list = cur.fetchall()
-        self.conn.close()
-        return list
-
-    def sort(self, order, col):
-        super()
-        cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items WHERE name = ASC")
         list = cur.fetchall()
         self.conn.close()
         return list

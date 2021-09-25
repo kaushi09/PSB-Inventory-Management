@@ -12,17 +12,16 @@ class Login:
         else:
 
             if AdminModel().auth(self.usernameText.get(), self.passwordText.get()):
-                # self.master.destroy()
+                Dashboard(self.master)
+                self.frame.destroy()
                 # Dashboard(self.usernameText.get())
-                messagebox.showinfo(
-                    "welcome", "Login ", parent=self.frame)
             else:
                 messagebox.showerror(
                     "Error", "Invalid username and password", parent=self.frame)
 
     def __init__(self, master):
         self.master = master
-        self.master.title("PSB-Inventory-Management")
+        self.master.title("PSB-Inventory-Management - Login")
         self.master.geometry("1350x700+0+0")
         self.frame = Frame(master)
         self.frame.pack()
