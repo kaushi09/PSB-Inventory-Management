@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from dashboard import Dashboard
-from model.AdminModel import AdminModel
+from AdminModel import AdminModel
 
 
 class Login:
@@ -11,7 +11,7 @@ class Login:
                 "Error", "Username and Password field are required", parent=self.frame)
         else:
 
-            if AdminModel().authLogin(self.usernameText.get(), self.passwordText.get()):
+            if AdminModel().auth(self.usernameText.get(), self.passwordText.get()):
                 # self.master.destroy()
                 # Dashboard(self.usernameText.get())
                 messagebox.showinfo(

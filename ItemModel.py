@@ -1,8 +1,8 @@
 
-from Connection import Connection
+from Conn import Conn
 
 
-class ItemModel(Connection):
+class ItemModel(Conn):
 
     def get(self):
         super()
@@ -54,6 +54,6 @@ class ItemModel(Connection):
         return list
 
 
-ItemModel().update(5, 'test A', 'test cate A', 67, 68.00, '2020-04-01')
-#ItemModel().create('test', 'test cate', 65, 65.00, '2020-01-01')
-print(ItemModel().get())
+# ItemModel().update(5, 'test A', 'test cate A', 67, 68.00, '2020-04-01')
+# #ItemModel().create('test', 'test cate', 65, 65.00, '2020-01-01')
+# print(ItemModel().get())

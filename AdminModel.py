@@ -1,8 +1,8 @@
 
-from Connection import Connection
+from Conn import Conn
 
 
-class AdminModel(Connection):
+class AdminModel(Conn):
 
     def auth(self, username, password):
         super()
