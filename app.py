@@ -1,10 +1,25 @@
 from tkinter import *
 from tkinter import messagebox
-
-import mysql.connector
+from dashboard import Dashboard
+from model.AdminModel import AdminModel
 
 
 class Login:
+    def authLogin(self):
+        if self.usernameText.get() == "" or self.passwordText.get() == "":
+            messagebox.showerror(
+                "Error", "Username and Password field are required", parent=self.frame)
+        else:
+
+            if AdminModel().authLogin(self.usernameText.get(), self.passwordText.get()):
+                # self.master.destroy()
+                # Dashboard(self.usernameText.get())
+                messagebox.showinfo(
+                    "welcome", "Login ", parent=self.frame)
+            else:
+                messagebox.showerror(
+                    "Error", "Invalid username and password", parent=self.frame)
+
     def __init__(self, master):
         self.master = master
         self.master.title("PSB-Inventory-Management")
@@ -24,28 +39,8 @@ class Login:
         self.passwordText = Entry(self.frame)
         self.passwordText.grid(row=1, column=1)
 
-        def auth():
-            if self.usernameText.get() == "" or self.passwordText.get() == "":
-                messagebox.showerror(
-                    "Error", "Username and Password field are required", parent=self.frame)
-            else:
-                cnx = mysql.connector.connect(user='root', password='12345678',
-                                              host='127.0.0.1', database='ims', auth_plugin='mysql_native_password')
-                mycursor = cnx.cursor()
-                mycursor.execute(
-                    "SELECT * FROM admins WHERE username = '%s' AND password = '%s' LIMIT 1" % (self.usernameText.get(), self.passwordText.get()))
-                myresult = mycursor.fetchall()
-
-                if myresult:
-                    messagebox.showinfo(
-                        "welcome", "Login ", parent=self.frame)
-                else:
-                    messagebox.showerror(
-                        "Error", "Invalid username and password", parent=self.frame)
-
-                cnx.close()
-
-        self.loginButton = Button(self.frame, text="Login", command=auth)
+        self.loginButton = Button(
+            self.frame, text="Login", command=self.authLogin)
         self.loginButton.grid(row=2, column=1)
 
 
