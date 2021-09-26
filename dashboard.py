@@ -23,12 +23,12 @@ class Dashboard:
     def showItem(self):
         if hasattr(self, "employee"):
             self.employee.clearFrame()
-        Item(self.master)
+        self.item = Item(self.master)
 
     def showEmployee(self):
         if hasattr(self, "item"):
             self.item.clearFrame()
-        Employee(self.master)
+        self.employee = Employee(self.master)
 
 
 # master = Tk()

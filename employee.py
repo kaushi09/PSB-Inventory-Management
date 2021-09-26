@@ -146,7 +146,7 @@ class Employee:
         if self.tree.selection():
             if hasattr(self, 'frameshow'):
                 self.frameshow.destroy()
-            self.frameshow = Frame(master)
+            self.frameshow = Frame(self.master)
             x = self.tree.selection()[0]
             item = self.tree.item(x)['values']
             self.frameshow.pack()
@@ -245,14 +245,16 @@ class Employee:
         self.name.delete(0, END)
         self.emp_no.delete(0, END)
         self.date.delete(0, END)
-        self.frameshow.destroy()
+        if hasattr(self, 'frameshow'):
+            self.frameshow.destroy()
         self.getEmployee()
 
     def clearFrame(self):
         self.frame.destroy()
         self.frameItem.destroy()
         self.frameTable.destroy()
-        self.frameshow.destroy()
+        if hasattr(self, 'frameshow'):
+            self.frameshow.destroy()
 
 
 # master = Tk()
