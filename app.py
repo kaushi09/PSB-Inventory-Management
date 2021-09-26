@@ -10,11 +10,9 @@ class Login:
             messagebox.showerror(
                 "Error", "Username and Password field are required", parent=self.frame)
         else:
-
             if AdminModel().auth(self.usernameText.get(), self.passwordText.get()):
                 Dashboard(self.master)
                 self.frame.destroy()
-                # Dashboard(self.usernameText.get())
             else:
                 messagebox.showerror(
                     "Error", "Invalid username and password", parent=self.frame)
@@ -23,6 +21,7 @@ class Login:
         self.master = master
         self.master.title("PSB-Inventory-Management - Login")
         self.master.geometry("1350x700+0+0")
+
         self.frame = Frame(master)
         self.frame.pack()
 
@@ -40,7 +39,7 @@ class Login:
 
         self.loginButton = Button(
             self.frame, text="Login", command=self.authLogin)
-        self.loginButton.grid(row=2, column=1)
+        self.loginButton.grid(row=2, column=1, padx=10, pady=10)
 
 
 master = Tk()

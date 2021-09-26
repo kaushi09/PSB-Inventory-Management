@@ -250,9 +250,11 @@ class Employee:
 
     def clearFrame(self):
         self.frame.destroy()
+        self.frameItem.destroy()
         self.frameTable.destroy()
+        self.frameshow.destroy()
 
 
-master = Tk()
-obj = Employee(master)
-master.mainloop()
+# master = Tk()
+# obj = Employee(master)
+# master.mainloop()

@@ -105,6 +105,15 @@ class Item:
 
         self.getItem()
 
+    def getItem(self):
+        try:
+            lst = ItemModel().get()
+            for i in lst:
+                self.tree.insert('', 'end', values=i)
+
+        except Exception as e:
+            messagebox.showerror("Error", e)
+
     def addItem(self):
         if self.name.get() == "":
             messagebox.showerror("Error", "Please enter name")
@@ -188,15 +197,6 @@ class Item:
         except Exception as e:
             messagebox.showerror("Error", e)
 
-    def getItem(self):
-        try:
-            lst = ItemModel().get()
-            for i in lst:
-                self.tree.insert('', 'end', values=i)
-
-        except Exception as e:
-            messagebox.showerror("ErrorF", e)
-
     def deleteItem(self):
         if self.tree.selection():
             x = self.tree.selection()[0]
@@ -238,7 +238,7 @@ class Item:
         self.price.delete(0, END)
         self.date.delete(0, END)
 
-        # self.table.delete(0, END)
+        self.tree.delete(0, END)
 
         self.getItem()
 
@@ -247,6 +247,6 @@ class Item:
         self.frameTable.destroy()
 
 
-master = Tk()
-obj = Item(master)
-master.mainloop()
+# master = Tk()
+# obj = Item(master)
+# master.mainloop()
