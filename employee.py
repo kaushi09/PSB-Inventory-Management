@@ -71,10 +71,6 @@ class Employee:
         self.showButton.grid(row=3, column=2)
 
         self.assignButton = Button(
-            self.frame, text="Apply to Employee", command=self.assignItem)
-        self.assignButton.grid(row=3, column=3)
-
-        self.assignButton = Button(
             self.frame, text="Received Items", command=self.showItem)
         self.assignButton.grid(row=3, column=4)
 
@@ -128,8 +124,9 @@ class Employee:
             messagebox.showerror("Error", "Please enter registerd date")
         else:
             try:
+
                 EmployeeModel().create(self.name.get(), self.emp_no.get(), self.date.get())
-                self.framet.destroy()
+                self.clearData()
                 self.getEmployee()
                 messagebox.showinfo("Success", "Employee added")
             except Exception as e:
@@ -166,7 +163,7 @@ class Employee:
             try:
                 lst = EmployeeModel().show(item[0])
                 for i in lst:
-                    items = [i[6], i[12], i[13]]
+                    items = [i[5], i[12], i[13]]
                     self.treeshow.insert('', 'end', values=items)
 
             except Exception as e:
@@ -192,6 +189,10 @@ class Employee:
 
             self.employee.insert(0, item[1])
             self.frameItem.pack()
+
+            self.assignButton = Button(
+                self.frameItem, text="Apply to Employee", command=self.assignItem)
+            self.assignButton.grid(row=5, column=5)
         else:
             messagebox.showerror(
                 "Error", "Please select the row you want to assign")
