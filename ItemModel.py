@@ -55,13 +55,15 @@ class ItemModel(Conn):
 
     def sort(self, order, col):
         super()
+        val = (order, col)
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items WHERE name = ASC")
+        cur.execute("SELECT * FROM items ORDER BY " +
+                    str(col) + " " + str(order))
         list = cur.fetchall()
         self.conn.close()
         return list
 
 
-# ItemModel().update(5, 'test A', 'test cate A', 67, 68.00, '2020-04-01')
-# #ItemModel().create('test', 'test cate', 65, 65.00, '2020-01-01')
+#ItemModel().sort('qty', 'ASC')
+# #ItemModel().create('test', 'test cate', 65, 65.00, '2020-01-01')ASC
 # print(ItemModel().get())

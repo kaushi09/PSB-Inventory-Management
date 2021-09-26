@@ -12,7 +12,7 @@ class Employee:
         self.frame = Frame(master)
         self.frame.pack()
 
-        # Form-----------------------------------------------------
+        # main Form-----------------------------------------------------
         self.nameLabel = Label(self.frame, text="Name")
         self.nameLabel.grid(row=0, column=0)
 
@@ -31,17 +31,54 @@ class Employee:
         self.date = Entry(self.frame)
         self.date.grid(row=2, column=1)
 
+        # Item Form-----------------------------------------------------
+        self.frameItem = Frame(master)
+
+        self.nameLabel = Label(self.frameItem, text="Employee")
+        self.nameLabel.grid(row=0, column=4)
+
+        self.empLabel = Label(self.frameItem, text="Item")
+        self.empLabel.grid(row=1, column=4)
+
+        self.dateLabel = Label(self.frameItem, text="Qty")
+        self.dateLabel.grid(row=2, column=4)
+
+        self.dateLabel = Label(self.frameItem, text="Registered at")
+        self.dateLabel.grid(row=3, column=4)
+
+        self.employee = Entry(self.frameItem)
+        self.employee.grid(row=0, column=5)
+
+        self.item_id = Combobox(
+            self.frameItem, values=EmployeeModel().getItem())
+        self.item_id.grid(row=1, column=5)
+
+        self.qty = Entry(self.frameItem)
+        self.qty.grid(row=2, column=5)
+
+        self.datei = Entry(self.frameItem)
+        self.datei.grid(row=3, column=5)
+
+        # action Form-----------------------------------------------------
         self.loginButton = Button(
             self.frame, text="Add Employee", command=self.addEmployee)
         self.loginButton.grid(row=3, column=1)
 
         self.showButton = Button(
-            self.frame, text="Recieved Items", command=self.showItem)
+            self.frame, text="Offer Items", command=self.fromItem)
         self.showButton.grid(row=3, column=2)
 
         self.assignButton = Button(
-            self.frame, text="Assign Items", command=self.assignItem)
+            self.frame, text="Apply to Employee", command=self.assignItem)
         self.assignButton.grid(row=3, column=3)
+
+        self.assignButton = Button(
+            self.frame, text="Received Items", command=self.showItem)
+        self.assignButton.grid(row=3, column=4)
+
+        self.clearButton = Button(
+            self.frame, text="All Clear", command=self.clearData)
+        self.clearButton.grid(row=3, column=5)
 
         # Sort---------------------------
         self.col = Combobox(self.frame, values=(
@@ -64,6 +101,20 @@ class Employee:
         self.searchButton.grid(row=6, column=5)
 
         # Table-----------------------------------------------------
+        self.frameTable = Frame(master)
+        self.frameTable.pack()
+        # columns
+        columns = ('#1', '#2', '#3', '#4')
+
+        self.tree = Treeview(self.frameTable, columns=columns, show='headings')
+
+        # define headings
+        self.tree.heading('#1', text='ID')
+        self.tree.heading('#2', text='Name')
+        self.tree.heading('#3', text='Employee No')
+        self.tree.heading('#4', text='Date')
+
+        self.tree.pack()
         self.getEmployee()
 
     def addEmployee(self):
@@ -83,46 +134,123 @@ class Employee:
                 messagebox.showerror("Error", e)
 
     def getEmployee(self):
-        self.framet = Frame(self.master)
-        self.framet.pack()
-
         try:
-
             lst = EmployeeModel().get()
-            # find total number of rows and
-            # columns in list
-            total_rows = len(lst)
-            total_columns = len(lst[0])
+            for i in lst:
+                self.tree.insert('', 'end', values=i)
 
-            # code for creating table
-            for i in range(total_rows):
-                for j in range(total_columns):
-                    self.table = Entry(self.framet, width=20,
-                                       font=('Arial', 16, 'bold'))
-                    self.table.grid(row=i, column=j)
-                    self.table.insert(END, lst[i][j])
+        except Exception as e:
+            messagebox.showerror("ErrorF", e)
+
+    def showItem(self):
+        if self.tree.selection():
+            if hasattr(self, 'frameshow'):
+                self.frameshow.destroy()
+            self.frameshow = Frame(master)
+            x = self.tree.selection()[0]
+            item = self.tree.item(x)['values']
+            self.frameshow.pack()
+
+            columns = ('#1', '#2', '#3')
+            self.treeshow = Treeview(
+                self.frameshow, columns=columns, show='headings')
+            self.treeshow.heading('#1', text='Item')
+            self.treeshow.heading('#2', text='Qty')
+            self.treeshow.heading('#3', text='Date')
+            self.treeshow.pack()
+
+            self.nameLabel1 = Label(self.frameshow, text="Name :" + item[1])
+            self.nameLabel1.pack()
+            try:
+                lst = EmployeeModel().show(item[0])
+                for i in lst:
+                    items = [i[6], i[12], i[13]]
+                    self.treeshow.insert('', 'end', values=items)
+
+            except Exception as e:
+                messagebox.showerror("Error", e)
+        else:
+            messagebox.showerror(
+                "Error", "Please select the row you want to show")
+
+    def fromItem(self):
+        if self.tree.selection():
+            if hasattr(self, 'frameshow'):
+                self.frameshow.destroy()
+            x = self.tree.selection()[0]
+            item = self.tree.item(x)['values']
+
+            self.employee_id = item[0]
+            self.item_id.delete(0, END)
+            self.qty.delete(0, END)
+            self.datei.delete(0, END)
+
+            self.employee.insert(0, item[1])
+            self.frameItem.pack()
+        else:
+            messagebox.showerror(
+                "Error", "Please select the row you want to assign")
+
+    def assignItem(self):
+        if self.item_id.get().partition(' ')[0] == "":
+            messagebox.showerror("Error", "Please select item")
+        elif self.qty.get() == "":
+            messagebox.showerror("Error", "Please enter qty")
+        elif self.datei.get() == "":
+            messagebox.showerror("Error", "Please enter assigned_at")
+        else:
+            try:
+                EmployeeModel().updateItem(self.employee_id, self.item_id.get().partition(' ')[0],
+                                           self.qty.get(), self.datei.get())
+                self.frameItem.destroy()
+                messagebox.showinfo("Success", "Item assign")
+            except Exception as e:
+                messagebox.showerror("Error", e)
+
+    def sortItem(self):
+        order = self.order.get()
+        col = self.col.get()
+        fetchdata = self.tree.get_children()
+        for f in fetchdata:
+            self.tree.delete(f)
+        try:
+            lst = EmployeeModel().sort(order, col)
+            print(lst)
+            if len(lst) == 0:
+                messagebox.showerror("Error", "No item found")
+            else:
+                for i in lst:
+                    self.tree.insert('', 'end', values=i)
+
         except Exception as e:
             messagebox.showerror("Error", e)
 
-    def showItem(self):
-        self.frame.destroy()
-        self.framet.destroy()
-
-    def assignItem(self):
-        self.frame.destroy()
-        self.framet.destroy()
-
-    def sortItem(self):
-        self.frame.destroy()
-        self.framet.destroy()
-
     def searchItem(self):
-        self.frame.destroy()
-        self.framet.destroy()
+        query = self.search.get()
+        fetchdata = self.tree.get_children()
+        for f in fetchdata:
+            self.tree.delete(f)
+        try:
+            lst = EmployeeModel().search(query)
+            if len(lst) == 0:
+                messagebox.showerror("Error", "No item found")
+            else:
+                for i in lst:
+                    self.tree.insert('', 'end', values=i)
+
+        except Exception as e:
+            messagebox.showerror("Error", e)
+
+    def clearData(self):
+        self.name.delete(0, END)
+        self.emp_no.delete(0, END)
+        self.date.delete(0, END)
+        self.frameshow.destroy()
+        self.getEmployee()
 
     def clearFrame(self):
         self.frame.destroy()
-        self.framet.destroy()
+        self.frameTable.destroy()
 
 
 master = Tk()

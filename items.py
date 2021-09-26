@@ -61,12 +61,16 @@ class Item:
             self.frame, text="Delete Item", command=self.deleteItem)
         self.deleteButton.grid(row=5, column=4)
 
+        self.clearButton = Button(
+            self.frame, text="All Clear", command=self.clearData)
+        self.clearButton.grid(row=5, column=5)
+
         # Sort---------------------------
         self.col = Combobox(self.frame, values=(
             'name', 'category', 'qty', 'price', 'date'))
         self.col.grid(row=6, column=1)
 
-        self.order = Combobox(self.frame, values=('asc', 'desc'))
+        self.order = Combobox(self.frame, values=('ASC', 'DESC'))
         self.order.grid(row=6, column=2)
 
         self.searchButton = Button(
@@ -143,28 +147,38 @@ class Item:
 
     def searchItem(self):
         query = self.search.get()
-        selections = []
-        for child in self.tree.get_children():
-            # compare strings in  lower cases.
-            if query in self.tree.item(child)['values']:
-                print(self.tree.item(child)['values'])
-                selections.append(child)
-        print('search completed')
-        self.tree.selection_set(selections)
+        fetchdata = self.tree.get_children()
+        for f in fetchdata:
+            self.tree.delete(f)
+        try:
+            lst = ItemModel().search(query)
+            print(lst)
+            if len(lst) == 0:
+                messagebox.showerror("Error", "No item found")
+            else:
+                for i in lst:
+                    self.tree.insert('', 'end', values=i)
 
-    def sortItem(self):
-        order = self.order.get()
-        col = self.col.get()
+        except Exception as e:
+            messagebox.showerror("Error", e)
         # selections = []
         # for child in self.tree.get_children():
         #     # compare strings in  lower cases.
-        #     if order in self.tree.item(child)['values']:
+        #     if query in self.tree.item(child)['values']:
         #         print(self.tree.item(child)['values'])
         #         selections.append(child)
         # print('search completed')
         # self.tree.selection_set(selections)
+
+    def sortItem(self):
+        order = self.order.get()
+        col = self.col.get()
+        fetchdata = self.tree.get_children()
+        for f in fetchdata:
+            self.tree.delete(f)
         try:
             lst = ItemModel().sort(order, col)
+            print(lst)
             if len(lst) == 0:
                 messagebox.showerror("Error", "No item found")
             else:
@@ -175,7 +189,6 @@ class Item:
             messagebox.showerror("Error", e)
 
     def getItem(self):
-
         try:
             lst = ItemModel().get()
             for i in lst:
@@ -231,7 +244,7 @@ class Item:
 
     def clearFrame(self):
         self.frame.destroy()
-        self.tableframe.destroy()
+        self.frameTable.destroy()
 
 
 master = Tk()

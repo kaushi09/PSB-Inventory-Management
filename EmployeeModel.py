@@ -12,12 +12,30 @@ class EmployeeModel(Conn):
         self.conn.close()
         return list
 
+    def getItem(self):
+        super()
+        cur = self.conn.cursor()
+        cur.execute("SELECT id, name FROM items")
+        list = cur.fetchall()
+        self.conn.close()
+        return list
+
     def create(self, name, emp_no, date):
         super()
         val = (name, emp_no, date)
         cur = self.conn.cursor()
         cur.execute(
             "insert into employees (name, employee_no, registered_at) values(%s,%s,%s)", val)
+        self.conn.commit()
+        self.conn.close()
+        return True
+
+    def updateItem(self, employee_id, item_id, qty, date):
+        super()
+        val = (employee_id, item_id, qty, date)
+        cur = self.conn.cursor()
+        cur.execute(
+            "insert into employee_items (employee_id, item_id, qty, assigned_at) values(%s,%s,%s,%s)", val)
         self.conn.commit()
         self.conn.close()
         return True
@@ -48,10 +66,10 @@ class EmployeeModel(Conn):
         super()
         try:
             cur = self.conn.cursor()
-            cur.execute("SELECT * FROM employees WHERE id = %s", (id,))
-            self.conn.commit()
+            cur.execute("SELECT employees.*, items.*, employee_items.*  FROM employees INNER JOIN employee_items ON employees.id = employee_items.employee_id INNER JOIN items ON employee_items.item_id = items.id WHERE employees.id = %s", (id,))
+            list = cur.fetchall()
             self.conn.close()
-            return True
+            return list
         except:
             return False
 
@@ -60,6 +78,16 @@ class EmployeeModel(Conn):
         cur = self.conn.cursor()
         cur.execute("SELECT * FROM employees WHERE name LIKE " +
                     "'"+str(name)+"%'")
+        list = cur.fetchall()
+        self.conn.close()
+        return list
+
+    def sort(self, order, col):
+        super()
+        val = (order, col)
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM employees ORDER BY " +
+                    str(col) + " " + str(order))
         list = cur.fetchall()
         self.conn.close()
         return list
