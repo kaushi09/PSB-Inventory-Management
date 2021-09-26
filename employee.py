@@ -49,8 +49,10 @@ class Employee:
         self.employee = Entry(self.frameItem)
         self.employee.grid(row=0, column=5)
 
+        self.itemvalues = EmployeeModel().getItem()
+
         self.item_id = Combobox(
-            self.frameItem, values=EmployeeModel().getItem())
+            self.frameItem, values=self.itemvalues)
         self.item_id.grid(row=1, column=5)
 
         self.qty = Entry(self.frameItem)
@@ -177,11 +179,14 @@ class Employee:
         if self.tree.selection():
             if hasattr(self, 'frameshow'):
                 self.frameshow.destroy()
+
+            if hasattr(self, 'itemvalues'):
+                self.itemvalues = EmployeeModel().getItem()
+
             x = self.tree.selection()[0]
             item = self.tree.item(x)['values']
 
             self.employee_id = item[0]
-            self.item_id.delete(0, END)
             self.qty.delete(0, END)
             self.datei.delete(0, END)
 
@@ -245,6 +250,9 @@ class Employee:
         self.name.delete(0, END)
         self.emp_no.delete(0, END)
         self.date.delete(0, END)
+        if hasattr(self, 'itemvalues'):
+            self.itemvalues = EmployeeModel().getItem()
+
         if hasattr(self, 'frameshow'):
             self.frameshow.destroy()
         self.getEmployee()
