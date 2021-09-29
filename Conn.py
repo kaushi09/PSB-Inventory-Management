@@ -7,7 +7,7 @@ class Conn:
             con = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="12345678",
+                passwd="jana30111998",
                 database="ims",
                 auth_plugin='mysql_native_password'
             )

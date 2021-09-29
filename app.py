@@ -3,7 +3,6 @@ from tkinter import messagebox
 from dashboard import Dashboard
 from AdminModel import AdminModel
 
-
 class Login:
     def authLogin(self):
         if self.usernameText.get() == "" or self.passwordText.get() == "":
@@ -25,21 +24,25 @@ class Login:
         self.frame = Frame(master)
         self.frame.pack()
 
+        self.title = Label(self.frame, text="Admin Login", pady=30)
+        self.title.grid(row=0, column=2)
+
+
         self.username = Label(self.frame, text="Username")
-        self.username.grid(row=0, column=0)
+        self.username.grid(row=1, column=1)
 
         self.password = Label(self.frame, text="Password")
-        self.password.grid(row=1, column=0)
+        self.password.grid(row=2, column=1)
 
         self.usernameText = Entry(self.frame)
-        self.usernameText.grid(row=0, column=1)
+        self.usernameText.grid(row=1, column=2)
 
         self.passwordText = Entry(self.frame)
-        self.passwordText.grid(row=1, column=1)
+        self.passwordText.grid(row=2, column=2)
 
         self.loginButton = Button(
             self.frame, text="Login", command=self.authLogin)
-        self.loginButton.grid(row=2, column=1, padx=10, pady=10)
+        self.loginButton.grid(row=3, column=2, padx=10, pady=10)
 
 
 master = Tk()
