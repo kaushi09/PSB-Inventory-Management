@@ -7,7 +7,7 @@ class EmployeeModel(Conn):
     def get(self):
         super()
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM employees")
+        cur.execute("SELECT * FROM employees ORDER BY id DESC")
         list = cur.fetchall()
         self.conn.close()
         return list

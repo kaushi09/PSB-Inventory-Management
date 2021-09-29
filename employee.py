@@ -31,36 +31,6 @@ class Employee:
         self.date = Entry(self.frame)
         self.date.grid(row=2, column=1)
 
-        # Item Form-----------------------------------------------------
-        self.frameItem = Frame(master)
-
-        self.nameLabel = Label(self.frameItem, text="Employee")
-        self.nameLabel.grid(row=0, column=4)
-
-        self.empLabel = Label(self.frameItem, text="Item")
-        self.empLabel.grid(row=1, column=4)
-
-        self.dateLabel = Label(self.frameItem, text="Qty")
-        self.dateLabel.grid(row=2, column=4)
-
-        self.dateLabel = Label(self.frameItem, text="Registered at")
-        self.dateLabel.grid(row=3, column=4)
-
-        self.employee = Entry(self.frameItem)
-        self.employee.grid(row=0, column=5)
-
-        self.itemvalues = EmployeeModel().getItem()
-
-        self.item_id = Combobox(
-            self.frameItem, values=self.itemvalues)
-        self.item_id.grid(row=1, column=5)
-
-        self.qty = Entry(self.frameItem)
-        self.qty.grid(row=2, column=5)
-
-        self.datei = Entry(self.frameItem)
-        self.datei.grid(row=3, column=5)
-
         # action Form-----------------------------------------------------
         self.loginButton = Button(
             self.frame, text="Add Employee", command=self.addEmployee)
@@ -80,10 +50,12 @@ class Employee:
 
         # Sort---------------------------
         self.col = Combobox(self.frame, values=(
-            'name', 'employee_no', 'registered_at'))
+            'id', 'name', 'employee_no', 'registered_at'))
+        self.col.current(0)
         self.col.grid(row=6, column=1)
 
         self.order = Combobox(self.frame, values=('asc', 'desc'))
+        self.order.current(1)
         self.order.grid(row=6, column=2)
 
         self.searchButton = Button(
@@ -173,12 +145,41 @@ class Employee:
                 "Error", "Please select the row you want to show")
 
     def fromItem(self):
+
         if self.tree.selection():
+            # Item Form-----------------------------------------------------
+            self.frameItem = Frame(self.master)
+
+            self.nameLabel = Label(self.frameItem, text="Employee")
+            self.nameLabel.grid(row=0, column=4)
+
+            self.empLabel = Label(self.frameItem, text="Item")
+            self.empLabel.grid(row=1, column=4)
+
+            self.dateLabel = Label(self.frameItem, text="Qty")
+            self.dateLabel.grid(row=2, column=4)
+
+            self.dateLabel = Label(self.frameItem, text="Registered at")
+            self.dateLabel.grid(row=3, column=4)
+
+            self.employee = Entry(self.frameItem)
+            self.employee.grid(row=0, column=5)
+
+            self.itemvalues = EmployeeModel().getItem()
+
+            self.item_id = Combobox(
+                self.frameItem, values=self.itemvalues)
+            self.item_id.grid(row=1, column=5)
+
+            self.qty = Entry(self.frameItem)
+            self.qty.grid(row=2, column=5)
+
+            self.datei = Entry(self.frameItem)
+            self.datei.grid(row=3, column=5)
+
             if hasattr(self, 'frameshow'):
                 self.frameshow.destroy()
-
-            if hasattr(self, 'itemvalues'):
-                self.itemvalues = EmployeeModel().getItem()
+            self.frameItem.pack()
 
             x = self.tree.selection()[0]
             item = self.tree.item(x)['values']
@@ -188,7 +189,6 @@ class Employee:
             self.datei.delete(0, END)
 
             self.employee.insert(0, item[1])
-            self.frameItem.pack()
 
             self.assignButton = Button(
                 self.frameItem, text="Apply to Employee", command=self.assignItem)
@@ -251,11 +251,12 @@ class Employee:
         self.name.delete(0, END)
         self.emp_no.delete(0, END)
         self.date.delete(0, END)
-        if hasattr(self, 'itemvalues'):
-            self.itemvalues = EmployeeModel().getItem()
 
         if hasattr(self, 'frameshow'):
             self.frameshow.destroy()
+
+        for i in self.tree.get_children():
+            self.tree.delete(i)
         self.getEmployee()
 
     def clearFrame(self):

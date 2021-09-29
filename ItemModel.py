@@ -7,7 +7,7 @@ class ItemModel(Conn):
     def get(self):
         super()
         cur = self.conn.cursor()
-        cur.execute("SELECT * FROM items")
+        cur.execute("SELECT * FROM items ORDER BY id DESC")
         list = cur.fetchall()
         self.conn.close()
         return list
@@ -15,6 +15,7 @@ class ItemModel(Conn):
     def create(self, name, cate, qty, price, date):
         super()
         val = (name, cate, qty, price, date)
+        print(val)
         cur = self.conn.cursor()
         cur.execute(
             "insert into items (name, category, qty, price, date) values(%s,%s,%s,%s,%s)", val)

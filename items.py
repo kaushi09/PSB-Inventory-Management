@@ -67,10 +67,12 @@ class Item:
 
         # Sort---------------------------
         self.col = Combobox(self.frame, values=(
-            'name', 'category', 'qty', 'price', 'date'))
+            'id', 'name', 'category', 'qty', 'price', 'date'))
+        self.col.current(0)
         self.col.grid(row=6, column=1)
 
         self.order = Combobox(self.frame, values=('ASC', 'DESC'))
+        self.order.current(1)
         self.order.grid(row=6, column=2)
 
         self.searchButton = Button(
@@ -108,6 +110,7 @@ class Item:
     def getItem(self):
         try:
             lst = ItemModel().get()
+            print(lst)
             for i in lst:
                 self.tree.insert('', 'end', values=i)
 
@@ -129,7 +132,9 @@ class Item:
             try:
                 ItemModel().create(self.name.get(), self.cate.get(),
                                    self.qty.get(), self.price.get(), self.date.get())
+
                 self.clearData()
+
                 messagebox.showinfo("Success", "Item added")
             except Exception as e:
                 messagebox.showerror("Error", e)
@@ -238,7 +243,8 @@ class Item:
         self.price.delete(0, END)
         self.date.delete(0, END)
 
-        self.tree.delete(0, END)
+        for i in self.tree.get_children():
+            self.tree.delete(i)
 
         self.getItem()
 
